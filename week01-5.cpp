@@ -19,4 +19,5 @@ int main()
 		}
 		printf("%d\n", ans);//迴圈後面把ans印出來
 	}
+	return 0;
 }
