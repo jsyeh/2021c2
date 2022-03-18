@@ -70,4 +70,116 @@ step02-1b_老師再講解清楚,到底 C Tutor 裡面指標的箭頭,是指到�
 step03-2_介紹 while( gets(line) ) 這種寫法,可以一次讀入一整行, 不怕空格哦(scanf()怕空格)
 step03_3_最後老師把 Tell me the frequencies 解得差不多了, 只差最後印出來的順序。
 
+# Week04
+
+## step01-0
+0. step01-0_考前複習、考後講解,解釋Tell me the frequencies簡化版(只解決Input及Output)這題常見錯誤,並建立今天上課的基礎
+
+```C++
+///Week04-0.cpp step01-0 今天考試題目
+///簡化版,只解決 Input/Output
+#include <stdio.h>
+char line[2000];
+int main()
+{
+	int t=1;
+	while( gets(line) ){
+		if(t>1) printf("\n");
+		printf("Test Case %d\n", t);
+
+		t++;
+	}
+	return 0;
+}
+```
+
+## step01-1
+1. step01-1_今天的主題-Tell me the frequencies,老師介紹如何快速看英文題目、抓重點,並認識Ascending這個字從小到大,像字母A一樣。程式碼中利用字串的for迴圈,逐字母分析統計ans[c]++, 之後再用for迴圈把 ans[c] 答案照ASCII從大到小印出來,還沒有寫完。這個程式是從今天考試出發, 再加2段來完成。請在瘋狂程設-資傳一甲-進階CPE練習,試試這題, 截圖上傳
+```C++
+///Week04-1.cpp step01-1
+///複習上週教的, 利用字串迴圈來統計字母出現次數 ans[c]++
+///後面再把字母ASCII大到小, 把答案印出來
+#include <stdio.h>
+char line[2000];
+int main()
+{
+	int t=1;
+	while( gets(line) ){
+		if(t>1) printf("\n");
+
+		int ans[256]={};
+		for(int i=0; line[i]!=0; i++){
+			char c = line[i];
+			ans[c]++;
+		}
+        for(int c=128; c>=32; c--){
+            if(ans[c]==f) printf("%d %d\n", c, ans[c]);
+        }
+		t++;
+	}
+	return 0;
+}
+```
+
+## step02-1
+
+2. step02-1_剛剛利用字串迴圈,統計字母出現次數, 花了很多時間理解了。剛剛將字母從大到小印, 花時間理解了。現在我們加了一行,把頻率從小到大跑, 再看 if(ans[c]==f) 時印,這題完成。請在瘋狂程設-資傳一甲-進階CPE練習, 練習模式, 截圖上傳
+```C++
+///Week04-2.cpp step02-1
+#include <stdio.h>
+char line[2000];
+int main()
+{
+	int t=1;
+	while( gets(line) ){
+		if(t>1) printf("\n");
+
+		int ans[256]={};
+		for(int i=0; line[i]!=0; i++){
+			char c = line[i];
+			ans[c]++;
+		}
+		for(int f=1; f<=1000; f++){
+			for(int c=128; c>=32; c--){
+				if(ans[c]==f) printf("%d %d\n", c, ans[c]);
+			}
+		}
+		t++;
+	}
+	return 0;
+}
+```
+## step03-1
+
+3. step03-1_接下來我們花了很多時間討論,讓大家了解程式的意義,尤其是在花費的時間、效率問題。迴圈從1-1000慢, 迴圈1-max會快。所以改用最大值max,讓頻率從1到max依序印出來。請在瘋狂程設-資傳一甲-進階CPE練習, 練習模式, 截圖上傳
+
+```C++
+///Week04-3.cpp step03-1
+///改用max
+#include <stdio.h>
+char line[2000];
+int main()
+{
+	int t=1;
+	while( gets(line) ){
+		if(t>1) printf("\n");
+
+		int max=0;
+		int ans[256]={};
+		for(int i=0; line[i]!=0; i++){
+			char c = line[i];
+			ans[c]++;
+			if(ans[c]>max) max=ans[c];
+		}
+		for(int f=1; f<=max; f++){
+			for(int c=128; c>=32; c--){
+				if(ans[c]==f) printf("%d %d\n", c, ans[c]);
+			}
+		}
+		t++;
+	}
+	return 0;
+}
+```
+
 
