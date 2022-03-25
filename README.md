@@ -181,5 +181,173 @@ int main()
 	return 0;
 }
 ```
+# Week05
 
+# step01-1
+今天的主題是排序, 老師先複習大一上教過的「選擇排序法selection sort」口訣就「左手i,右手j, 大小不對就交換」
+
+```C++
+///Week05-1.cpp step01-1 sort
+///左手i,右手j
+#include <stdio.h>
+int a[10]={9,8,7, 1,2,3, 6,5,4, 0};
+int main()
+{
+    for(int i=0; i<10; i++){///左手i
+        for(int j=i+1; j<10; j++){///右手j
+            if( a[i] > a[j] ){ ///大小不對,交換
+                int temp=a[i];
+                a[i]=a[j];
+                a[j]=temp;
+            }
+        }
+    }
+
+    for(int i=0; i<10; i++) printf("%d ", a[i] );
+}
+```
+
+
+## step02-1
+接下來複習「泡泡排序法BubbleSort」口訣就是「每次巡一輪,a[i] a[i+1]大小不對就交換。多巡幾輪」
+
+```C++
+///Week05-2.cpp step02-1 複習「泡泡排序法BubbleSort」
+///口訣就是「每次巡一輪,a[i] a[i+1]大小不對就交換。多巡幾輪」
+#include <stdio.h>
+int a[10]={9,8,7, 1,2,3, 6,5,4, 0};
+int main()
+{
+    for(int k=0; k<10-1; k++){
+        for(int i=0; i<10-1; i++){
+            if( a[i] > a[i+1] ){
+                int temp=a[i];
+                a[i]=a[i+1];
+                a[i+1]=temp;
+            }
+        }
+        for(int i=0; i<10; i++) printf("%d ", a[i] );
+        printf("\n");
+    }
+}
+```
+
+## step02-2
+今天的主題是「快速排序法Quick Sort」速度會比我們大一上教的泡泡排序法、選擇排序法 快個幾萬倍、幾億倍(看數字有多少要排)。程式碼有3行比較難理解,分別是 自訂comp()函式時,裡面的參數有指標及const void有人看不懂。裡面有個指標轉型有點難, 使用時 qsort(a,100,sizeof(int),comp)就相對簡單多了
+
+```C++
+///Week05-3.cpp step02-2 更快一點
+#include <stdio.h>
+#include <stdlib.h> ///qsort()
+int comp( const void *p1, const void *p2 ) ///比較用的函式 comp()
+{
+    int a = *(int*)p1,  b = *(int*)p2;
+    if( a>b ) return +1; ///三種狀況
+    if( a<b ) return -1; ///口訣: 減法 a-b
+    if( a==b )return 0;
+}
+int main()
+{
+    int a[100];///內附亂碼
+    for(int i=0; i<100; i++) printf("%d ", a[i] );
+    printf("\n");///先看看內容很亂哦
+
+    qsort( a, 100, sizeof(int), comp );
+
+    for(int i=0; i<100; i++) printf("%d ", a[i] );
+    printf("\n");///排完之後, 檢查一下
+    return 0;
+}
+
+/*
+Q:如果有 10萬個數字要手中, 10萬*10萬=100億
+    for(int k=0; k<100000-1; k++){///10萬
+        for(int i=0; i<100000-1; i++){///10萬
+*/
+```
+
+# step03-0
+複習、介紹Git指令,從雲端clone下來, add的修改, commit 確認, push 推上雲端
+
+0. 安裝 Git for Windows, 同時 Chrome 登入 github 
+1. 開啟 Git Bash
+2. `cd desktop` 進入桌面 \
+    `git clone https://github.com/jsyeh/2021c2` 把雲端複製下來 \
+    cd 2021c2 進入你的目錄
+3. 把你的 桌面\2021c2 裡面, 放好你本週的程式 ex. week05 裡面有今天的程式
+4. 先把你放好的程式,加入 git 的帳冊 \
+`git status` (看到紅紅的檔案) \
+`git add .` \
+`git status (看到綠綠的檔案) \
+5. 你要 commit 它 \
+`git config --global user.email jsyeh@mail.mcu.edu.tw` \
+`git config --global user.name jsyeh` \
+`git commit -m "add week05" ` \
+6. git push 推送上雲端
+
+## step03-1
+今天的主題是要解 Hardwood species 將樹的物種名字做排序統計,其中我們先把資料讀進來。
+
+```C++
+///Week05-4.cpp step03-1
+///step03-1_今天的主題是要解 Hardwood species 將樹的物種名字做排序統計,其中我們先把資料讀進來。
+#include <stdio.h>
+char line[1000];
+int main()
+{
+	int T;
+	scanf("%d\n\n", &T); ///順便處理掉2個跳行
+
+	///t:1 火車頭 t:2 +車廂 t:3 +車廂 ....
+	for(int t=1; t<=T; t++){ ///t是第幾筆資料
+		if(t>1) printf("\n");
+
+		printf("現在讀到第%d大坨的資料\n", t);
+		while( gets(line) ){
+			if( line[0]==0 ) break; ///讀到空白行,表示是下一筆測資訊資
+            ///第1個字母,剛好是字串的結尾, 就是空白行
+		}
+	}
+}
+```
+
+
+## step03-2
+老師講解、你還不用寫,下週再寫。老師把 qsort() 結合字串排序,嘗試解決 Hardwood species這題
+
+```C++
+///Week05-5.cpp step03-2_今天的主題  Hardwood species
+///將樹的物種名字做排序統計
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+char tree[1000000][40];//100萬顆樹,名字30字母,開40用
+int comp( const void *p1, const void *p2 ){
+	char * tree1 = (char*) p1;
+	char * tree2 = (char*) p2;
+	return strcmp(tree1, tree2);
+}
+int main()
+{
+	int T;
+	scanf("%d\n\n", &T); ///順便處理掉2個跳行
+
+	///t:1 火車頭 t:2 +車廂 t:3 +車廂 ....
+	for(int t=1; t<=T; t++){ ///t是第幾筆資料
+		if(t>1) printf("\n");
+
+		int N=0;//幾顆樹
+		while( gets( tree[N] ) ){
+			if( tree[N][0]==0 ) break; ///讀到空白行,表示是下一筆測資
+			N++;
+		}
+
+		qsort( tree, N, 40, comp );
+
+		for(int i=0; i<N; i++){
+			printf("%s \n", tree[i] );
+		}
+	}
+}
+```
 
