@@ -353,3 +353,266 @@ int main()
 
 # Week06
 本週遇到清明連假，放假一次
+
+# Week07
+
+## step01-0
+今天考試是Hardwood Species簡化版 只解決 Input 及 Output 的問題。老師在考前複習、考後講解有一位同學出錯的地方
+
+```c++
+#include <stdio.h>
+char line[200];
+int main()
+{
+	int T;
+	scanf("%d\n\n", &T);
+	for(int t=1; t<=T; t++){
+		int N=0;
+		while( gets(line) ){
+			if( line[0]==0 ) break;
+			N++;
+		}
+	
+		if(t>1) printf("\n");
+		printf("Test Case %d: %d lines\n", t, N);
+	}
+	return 0;
+}
+```
+
+## step01-1
+今天的主題是 字串排序, 我們先把 Input 及 output 搞定
+
+
+```c++
+///Week07-1.cpp  step01-1 先解決字串排序的 Input/Output
+#include <stdio.h>
+char line[1000][20];//要有字串陣列 字串(字元陣列 20字母)
+//       1000行 20字母  左手i 右手j
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+
+	for(int i=0; i<N; i++){ //Input
+		gets( line[i] );
+	}
+
+
+	for(int i=0; i<N; i++){ //Output
+		printf("%s\n", line[i] );
+	}
+
+}
+
+```
+
+
+## step01-2
+最後我們把字串排序的程式寫完了, 前面解決完 Input Output後, 我們使用 qsort( line, N, 20, compare ) 好像很簡單, 其實需要寫 int compare()函式, 裡面的 const void 指標 有點難懂, 今天教完, 希望大家下週考試會熟悉。還有字串比較的 strcmp()也要熟悉
+
+
+```c++
+///Week07-2.cpp  step01-2 qsort()
+///最後我們把字串排序的程式寫完了,
+///前面解決完 Input Output後,
+///我們使用 qsort( line, N, 20, compare ) 好像很簡單,
+///其實需要寫 int compare()函式, 裡面的 const void 指標 有點難懂,
+///今天教完, 希望大家下週考試會熟悉。
+///還有字串比較的 strcmp()也要熟悉
+#include <stdio.h>
+#include <stdlib.h> // qsort()
+#include <string.h> // strcmp()
+char line[1000][20];
+int compare( const void *p1, const void *p2 )
+{      //保護不能動    指標    //型別沒指定
+	char * s1 = (char*) p1;
+	char * s2 = (char*) p2;
+	return strcmp( s1, s2 );
+}
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+
+	for(int i=0; i<N; i++){ //Input
+		gets( line[i] );
+	}
+
+	qsort( line, N, 20, compare  );
+
+	for(int i=0; i<N; i++){ //Output
+		printf("%s\n", line[i] );
+	}
+
+}
+```
+
+
+## step02-1
+老師在第2節課問同學剛剛「字串排序」程式碼裡面的意思,不過許多同學可能剛接觸、不熟, 所以老師又重新講解並示範了另外一種寫法
+
+```c++
+///Week07-3.cpp step02-1 重寫 字串排序
+///老師在第2節課問同學剛剛「字串排序」程式碼裡面的意思,不過許多同學可能剛接觸、不熟,
+///所以老師又重新講解並示範了另外一種寫法
+#include <stdio.h>
+#include <stdlib.h> // qsort()
+#include <string.h> // strcmp()
+char line[1000][20];
+int compare( const void *p1, const void *p2 )
+{
+	return strcmp( (char*)p1, (char*)p2 );
+}
+
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s", line[i] );
+	}
+
+	qsort( line, N, 20, compare );
+
+	for(int i=0; i<N; i++){
+		printf("%s\n", line[i] );
+	}
+}
+```
+
+
+## step02-2
+我們播放莫札特的歌劇中的一幕, 男生唱出一堆清單的統計, 到底主人喜歡哪些女生。本題就是想要把整個清單,依據國家來統計。第一步先把Input 及 Output 搞定, 因為有很多空格, 所以需要 gets()讀進一整行, 讀到 line[i] 裡面
+
+```c++
+///Week07-4.cpp step02-2 Input
+///我們播放莫札特的歌劇中的一幕, 男生唱出一堆清單的統計, 到底主人喜歡哪些女生。
+///本題就是想要把整個清單,依據國家來統計。第一步先把Input 及 Output 搞定,
+///因為有很多空格, 所以需要 gets()讀進一整行, 讀到 line[i] 裡面
+#include <stdio.h>
+char line[2000][80];
+ //      2000行 80字母
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+
+	for(int i=0; i<N; i++){
+		gets(  line[i]  );
+	}
+
+	for(int i=0; i<N; i++){
+		printf("%s\n", line[i] );
+	}
+
+}
+```
+
+## step03-1
+在 Input 的時候,改成 scanf()讀進國家名, 空格後的 全部資料, 利用gets()清空
+
+```c++
+//Week07-5.cpp step03-1 Input 國家名 名字 字 字 字 字
+
+#include <stdio.h>
+char line[2000][80];
+ //      2000行 80字母
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+	
+	for(int i=0; i<N; i++){
+	//scanf() vs. gets()
+		scanf("%s", line[i] );
+		char others[80];
+		gets(  others  );
+	}
+	
+	for(int i=0; i<N; i++){
+		printf("%s\n", line[i] );
+	}
+}
+```
+
+
+## step03-2
+利用 qsort()完成國家名的排序。
+要小心, int compare()裡面的 return 忘了寫,需要修正。
+
+```c++
+//Week07-6.cpp step03-2 qsort()
+
+#include <stdio.h>
+#include <stdlib.h> //qsort()
+#include <string.h> //strcmp()
+char line[2000][80];
+int compare( const void *p1, const void *p2 )
+{
+	return strcmp( (char*)p1, (char*)p2 );
+}
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+
+	for(int i=0; i<N; i++){
+		scanf("%s", line[i] );
+		char others[80];
+		gets(  others  );
+	}
+
+	qsort( line, N, 80, compare );
+
+	for(int i=0; i<N; i++){
+		printf("%s\n", line[i] );
+	}
+}
+```
+
+## step03-3
+最後我們統計出各個國家出現的次數, 利用的方法,是有迴圈,把上下2筆資料 strcmp(line[i],line[i+1])==0看是否相同, 相同就combo++,不相同就可以印出 line[i] 那個國家對應的 combo數量。裡面有2個地方比較特別,分別是迴圈跑到什麼時候結束,及對應的 line[N]的「哨兵sentinal」在超過的地方標註成空字串
+
+```c++
+///Week07-7.cpp step03-3 最後統計
+///最後我們統計出各個國家出現的次數,
+///利用迴圈,把上下2筆資料 strcmp(line[i],line[i+1])==0看是否相同
+///相同就combo++,不相同就可以印出 line[i] 那個國家對應的 combo數量。
+///裡面有2個地方比較特別,分別是迴圈跑到什麼時候結束,
+///及對應的 line[N]的「哨兵sentinal」在超過的地方標註成空字串
+#include <stdio.h>
+#include <stdlib.h> //qsort()
+#include <string.h> //strcmp()
+char line[2001][80];
+int compare( const void *p1, const void *p2 )
+{
+	return strcmp( (char*)p1, (char*)p2 );
+}
+int main()
+{
+	int N;
+	scanf("%d\n", &N);
+
+	for(int i=0; i<N; i++){
+		scanf("%s", line[i] );
+		char others[80];
+		gets(  others  );
+	}
+
+	qsort( line, N, 80, compare );
+
+	line[N][0]=0;//空字串
+	int combo=1;
+	for(int i=0; i<N; i++){
+		if( strcmp(line[i],line[i+1])==0 ){//上下2行
+			combo++;//相同
+		}else{//不相同:印答案
+			printf("%s %d\n", line[i], combo );
+			combo=1;
+		}
+	}
+}
+```
+
+
