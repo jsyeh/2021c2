@@ -616,3 +616,123 @@ int main()
 ```
 
 
+# Wee08
+## step01-0
+上課考試前,老師帶大家複習今天題目「字串排序」,希望大家的思緒能一步步慢慢來,不要直接背程式碼。常見的錯誤,像是int compare()忘了return,或語法不熟悉等
+
+```c++
+///Week08-0.cpp step01-0 字串排序
+#include <stdio.h>
+#include <stdlib.h> //qsort()
+#include <string.h> //strcmp()
+
+char line[100][80]; //最多100行,每行80字母
+
+int compare( const void *p1, const void *p2 )
+{
+	     //strcmp( 字串1    , 字串2     );
+	return strcmp( (char*)p1, (char*)p2 );
+}
+int main()
+{
+	int N;
+	scanf("%d", &N);
+
+	for(int i=0; i<N; i++){
+		scanf("%s", line[i] );
+	}
+
+	qsort( line, N, 80, compare );
+
+	for(int i=0; i<N; i++){
+		printf("%s\n", line[i] );
+	}
+
+}
+```
+
+## step01-1
+上週教過 List of Conquests,我們下次想考它。所以趁著今天考完字串排序,帶大家把它做出來。先把資料都正確讀出來, 等一下要qsort()排序
+
+```c++
+///Week01-1 step01-1 準備下次考試/複習上週教過
+///趁著今天考完字串排序,帶大家把它做出來。先把資料都正確讀出來
+#include <stdio.h>
+char nation[2000][80]; //每筆80字母
+   //國家名 2000筆
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	//技巧:知道有幾筆 for迴圈, 不知道有幾筆 while迴圈
+	for(int i=0; i<N; i++){
+		scanf("%s", nation[i] );//空格斷開
+
+		char name[80];//人名,有空格在裡面
+		gets( name );//技巧: gets()把空格也吃進來
+	}
+
+
+	for(int i=0; i<N; i++){
+		printf("%s\n", nation[i] );
+	}
+}
+```
+
+## step02-1
+再一次,我們把 List of Conquests 做出來了, 先加入 qsort() 再利用 strcmp() 來比對字串
+
+```c++
+///Week08-2 step02-1 準備下次考試/複習上週教過 
+#include <stdio.h>
+#include <stdlib.h> //qsort()
+#include <string.h> //strcmp()
+char nation[2001][80];
+int compare( const void *p1, const void *p2 )
+{
+	return strcmp( (char*)p1, (char*)p2 );
+}
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s", nation[i] );//空格斷開
+		char name[80];//人名,有空格在裡面
+		gets( name );//技巧: gets()把空格也吃進來
+	}
+	
+	qsort( nation, N, 80, compare );
+	
+	nation[N][0]=0;//空字串
+	int combo = 1;//白色的那一筆
+	for(int i=0; i<N; i++){
+		//if( nation[i] == nation[i+1] ){//相同, BUT字串不能用== 要改
+		if( strcmp( nation[i], nation[i+1] ) == 0 ){
+			combo++; //多找到一個相同的
+		}else{
+			printf("%s %d\n", nation[i], combo );
+			combo = 1; //新的開始,有第1筆
+		}
+	}
+}
+```
+
+## step02-2
+檔案輸出,使用 FILE指標f,利用fopen()開啟檔案,利用fprintf()來檔案輸出
+
+```c++
+///Week08-3.cpp step02-2 檔案輸出 2行
+#include <stdio.h>
+
+int main()
+{///檔案指標    開啟檔案  檔名       模式w+ 寫+
+    FILE * f = fopen( "檔案輸出.txt", "w+" );
+    fprintf(f ,"Hello我在這裡哦\n" );
+
+     printf(   "Hello World\n");
+}
+```
+
+## step03-1
+示範如何問問題, 利用剛發生的實際故事,讓同學參與, 並思考如何問問題、如何回應、提供哪些訊息會比較好。
