@@ -736,3 +736,218 @@ int main()
 
 ## step03-1
 示範如何問問題, 利用剛發生的實際故事,讓同學參與, 並思考如何問問題、如何回應、提供哪些訊息會比較好。
+
+
+# Week09
+
+## step01-0
+考試前, 老師示範如何逐步寫出 List of Conquests 這題。分成6步,慢慢寫出來。
+
+```cpp
+///Week09-0.cpp 考試 List of Conquests
+#include <stdio.h>
+#include <stdlib.h> //qsort() step3
+#include <string.h> //strcmp() step5
+char nation[2001][80];
+int compare( const void*p1, const void *p2 )
+{//Step4: compare函式
+	return strcmp( (char*)p1, (char*)p2 );
+}  //Step5: strcmp
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s", nation[i] );
+
+		char line[80];
+		gets(line);
+	}//Step1: Input
+
+	qsort(nation,N,80, compare); //Step3: qsort()
+
+	nation[N][0]=0;//空字串
+	int combo = 1;//Step6
+	for(int i=0; i<N; i++){//Step2: Output
+		if( strcmp( nation[i], nation[i+1] ) == 0 ){ //相同
+			combo++;
+		}else{
+			printf("%s %d\n", nation[i], combo );
+			combo = 1;
+		}
+	}
+}
+```
+
+
+## step01-1
+大一上有教過「泡泡排序」,而上週有個網路事件與這個相關,所以今天想要將泡泡排序法做些修改,先寫出我們大一上學過的版本, 等一下要接著做修改。
+
+```cpp
+///Week09-1.cpp step01-1 從小到大
+#include <stdio.h>
+int grade[10]={9,8,1,2,3, 7,6,4,5,0};
+int main()
+{
+    int N=10;
+    for(int k=0; k<N-1; k++){
+        for(int i=0; i<N-1; i++){///泡泡排序法的核心
+            if( grade[i] > grade[i+1] ){ ///反了
+                int temp=grade[i];///就交換
+                grade[i]=grade[i+1];
+                grade[i+1]=temp;
+            }
+        }
+        for(int i=0; i<N; i++) printf("%d ", grade[i] );
+        printf("\n");
+    }
+}
+```
+
+## step01-2_同學遇到的問題傳 FB截圖給老師時, 老師分別進行講解。
+
+## step02-1_我們接下來做個修改,當改成從大到小時, if(判斷)的方向就要修改。同時利用 int change=0 這個變數, 有遇到問題要交換時 change++, 最後 if(change==0) break 便可以提早離開
+
+```cpp
+///Week09-2.cpp step02-1 改成 從大到小
+#include <stdio.h>
+int grade[10]={9,8,1,2,3, 7,6,4,5,0};
+int main()
+{
+    int N=10;
+    for(int k=0; k<N-1; k++){///做太多次了
+
+        int change=0;///進核心迴圈前,變動0個地方
+        for(int i=0; i<N-1; i++){///泡泡排序法的核心
+            if( grade[i] < grade[i+1] ){ ///反了,不符合需求
+                int temp=grade[i];///就交換
+                grade[i]=grade[i+1];
+                grade[i+1]=temp;
+                change++;///有動到1個地方
+            }
+        }
+        if(change==0) break; ///沒有動作,就提早結束休息
+
+        for(int i=0; i<N; i++) printf("%d ", grade[i] );
+        printf("\n");
+    }
+}
+```
+
+## step02-2
+看了網路事件中的好心人周心一的程式,我們把for(int k的這個迴圈,改用while(1){試試看,結果相同。
+
+```cpp
+///Week09-3.cpp step02-2 從大到小,改用while迴圈
+#include <stdio.h>
+int grade[10]={9,8,1,2,3, 7,6,4,5,0};
+int main()
+{
+    int N=10;
+    while(1){ ///一直做,直到好了,break
+
+        int change=0;///進核心迴圈前,變動0個地方
+        for(int i=0; i<N-1; i++){///泡泡排序法的核心
+            if( grade[i] < grade[i+1] ){ ///反了,不符合需求
+                int temp=grade[i];///就交換
+                grade[i]=grade[i+1];
+                grade[i+1]=temp;
+                change++;///有動到1個地方
+            }
+        }
+        if(change==0) break; ///沒有動作,就提早結束休息
+
+        for(int i=0; i<N; i++) printf("%d ", grade[i] );
+        printf("\n");
+    }
+}
+```
+
+## step02-3
+下週考試的題目,是剛剛教的程式的變型。我們先在瘋狂程設裡老師準備了 20-100筆資料, 都是有學號(姓名) 及分數。我們先把資料Input與Output搞定, 中間再配上剛剛寫的泡泡排序法,便能從小到大排好。不過 學號(姓名)的那個字串沒有跟著動。下一節課再改進它。
+
+```cpp
+///Week09-4.cpp step02-3 從高到底
+#include <stdio.h>
+int grade[100];//一百筆
+char name[100][30];
+char tempName[30];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s %d", name[i], &grade[i] );
+	}//Input
+	for(int k=0; k<N-1; k++){//很多次
+		for(int i=0; i<N-1; i++){//核心
+			if( grade[i] < grade[i+1] ){
+				int temp=grade[i];
+				grade[i]=grade[i+1];
+				grade[i+1]=temp;
+				int
+			}
+		}
+	}
+	for(int i=0; i<N; i++){
+		printf("%s %d\n", name[i], grade[i] );
+	}
+}
+```
+
+## step03-1
+剛剛沒有把字串(學號or姓名)也跟著交換排序。所以現在加上這段程式碼, 在交換grade[i] grade[i+1] 時, 利用 string.h 裡的 strcpy() 的複製能力, copy 3次, 便能完成交換, 以完成這一題
+
+```cpp
+///Week09-5.cpp step03-1 從高到底
+#include <stdio.h>
+#include <string.h> //strlen() strcpy() strcmp()
+int grade[100];//一百筆 整數
+char name[100][30];//一百筆 字串(30個字元)
+char tempName[30];//一筆 字串(30個字元)
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s %d", name[i], &grade[i] );
+	}//Input
+	for(int k=0; k<N-1; k++){//很多次
+		for(int i=0; i<N-1; i++){//核心
+			if( grade[i] < grade[i+1] ){
+				int temp=grade[i];
+				grade[i]=grade[i+1];
+				grade[i+1]=temp;
+
+				strcpy( tempName, name[i] );
+				strcpy( name[i], name[i+1] );
+				strcpy( name[i+1], tempName );
+			}
+		}
+	}
+	for(int i=0; i<N; i++){
+		printf("%s %d\n", name[i], grade[i] );
+	}
+}
+```
+
+## step03-2
+講解 strcmp(), strcpy(), strlen() 對照課本第4章函式, 進行解說, 並教一些口訣,加深大家的印象
+
+```cpp
+strlen() //string length
+strcpy() //string copy
+strcmp() //string compare
+```
+
+之前有教過 strlen()
+```cpp
+int N = strlen( line );
+for(int i=0; i<N; i++){
+
+}
+```
+
+接下來介紹 strcpy
+## step03-3
+講解同學在作業遇到的問題、講解Moodle期中問卷同學遇到的問題
