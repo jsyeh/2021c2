@@ -959,3 +959,153 @@ for(int i=0; i<N; i++){
 接下來介紹 strcpy
 ## step03-3
 講解同學在作業遇到的問題、講解Moodle期中問卷同學遇到的問題
+
+
+# Week10
+程式設計 Week10 2022-04-29
+1. 考試: 「學號姓名、分數」排序
+2. 主題: 物件排序
+3. 主題: 撲克牌洗牌
+4. 主題: 互動程式設計
+
+## step01-0
+上課考試前,老師先示範複習本週的考試題目(姓名學號+分數)的排序
+
+```cpp
+#include <stdio.h>
+#include <string.h>
+char name[100][30], tempName[30];
+int grade[100];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){//Input
+		scanf("%s %d", name[i], &grade[i] );
+	}
+
+	for(int k=0; k<N-1; k++){
+		for(int i=0; i<N-1; i++){
+			if( grade[i] < grade[i+1] ){//wrong
+				int temp = grade[i];
+				grade[i] = grade[i+1];
+				grade[i+1] = temp;
+				strcpy( tempName, name[i] );
+				strcpy( name[i], name[i+1] );
+				strcpy( name[i+1], tempName );
+			}
+		}
+	}
+
+	for(int i=0; i<N; i++){//Output
+		printf("%s %d\n", name[i], grade[i] );
+	}
+}
+```
+
+## step01-1
+step01-1_今天想要教到C++的物件、STL及sort,所以我們先把今天的考試題目,改成在CodeBlocks中使用檔案來讀取。首先先把 input.txt 準備好,內容是今天考試的Input,接下來很像今天的考試,只是多了 fin=fopen()及 fscanf(), 完成Input與Output
+
+Week01-1.cpp step01-1 模仿今天的考試,但改用檔案
+1. 在 CodeBlocks 要把 input.txt 準備好(從瘋狂程設copy來)
+2. `FILE * fin = fopen("intput.txt", "r");`
+3. scanf() 改成 fscanf(fin, )
+
+```cpp
+///Week01-1.cpp step01-1 一定要 .cpp 檔 模仿今天的考試,但改用檔案
+///1. 在 CodeBlocks 要把 input.txt 準備好(從瘋狂程設copy來)
+///2. `FILE * fin = fopen("intput.txt", "r");`
+///3. scanf() 改成 fscanf(fin, )
+#include <stdio.h>
+char name[100][30];
+int grade[100];
+int main()
+{
+    FILE * fin = fopen("input.txt", "r" );
+    int N;
+  ///scanf("%d", &N);
+    fscanf( fin, "%d", &N );
+    for(int i=0; i<N; i++){
+        fscanf(fin, "%s %d", name[i], &grade[i] );
+    }
+
+
+    for(int i=0; i<N; i++){
+        printf("%s %d\n", name[i], grade[i] );
+    }
+}
+```
+
+## step02-1
+加上排序,依照分數大到小排,使用今天考試教過的泡泡排序法,分別將分數、名字都排序
+
+```cpp
+///Week01-2.cpp step02-1 一定要 .cpp 檔
+///(1)檔案, (2)排序分數大-小
+#include <stdio.h>
+#include <string.h> ///strcpy()
+char name[100][30], tempName[30];
+int grade[100];
+int main()
+{
+    FILE * fin = fopen("input.txt", "r" );
+    int N;
+    fscanf( fin, "%d", &N );
+    for(int i=0; i<N; i++){
+        fscanf(fin, "%s %d", name[i], &grade[i] );
+    }
+    for(int k=0; k<N-1; k++){
+        for(int i=0; i<N-1; i++){
+            if( grade[i] < grade[i+1] ){///不對,就交換
+                int temp=grade[i];
+                grade[i] = grade[i+1];
+                grade[i+1] = temp;
+                strcpy( tempName, name[i] );
+                strcpy( name[i], name[i+1] );
+                strcpy( name[i+1], tempName );
+            }
+        }
+    }
+    for(int i=0; i<N; i++){
+        printf("%s %d\n", name[i], grade[i] );
+    }
+}
+```
+
+## step03-0
+總結今天各版本的程式差別。下週上課考試的程式,可以挑選任何一種來寫。
+
+## step03-1
+step03-1_互動程式設計,教同學安裝 Processing 軟體配合老師的中文介面翻譯, 教 size(), text(), textSize() 及背景色background(),填充色彩fill(),配合色彩選擇器Color Selector來挑選色彩 
+
+互動程式設計
+1. 在 Moodle 或 Teams 下載 Processing 4.0 beta 8 版本
+2. 用 7-zip 解壓縮, 就可執行了
+
+```processing
+//老師的下載,中文很詳細 Processing 
+//MIT Media Lab發明,給設計師、互動創作、小孩大人
+//File-Preference,字型放大,可改用中文的字型
+size(300,300);//大視窗
+background(#FFFFBF);//背景色,淡黃色
+textSize(50);//字的大小,設50
+fill(#2429FF);//填充在字裡面的色彩,藍色
+text("Hello", 50,50);//在50,50的座標,印出Hello
+fill(#FF2466);//填充色換紅色
+text("Hello", 50,100);
+```
+
+## step03-2 
+寫第2個程式, Ctrl-N 開新檔案, 要寫「互動程式設計」的版本,準備好 void setup()設定的函式, void draw()畫圖的函式, 配合 if(mousePressed) 來決定 background()用哪種背景色,依mousePressed的點擊,決定秀哪種背景色
+
+
+```processing
+//想做互動,要有2個函式
+void setup(){//設定的函式
+  size(300,300);
+}
+void draw(){//畫圖的函式, 60次/秒
+  if(mousePressed) background(255,0,0);
+  else background(0,255,0);
+}
+```
