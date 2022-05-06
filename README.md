@@ -1109,3 +1109,210 @@ void draw(){//畫圖的函式, 60次/秒
   else background(0,255,0);
 }
 ```
+
+# Week11
+
+## step01-0
+考試前, 老師複習今天的考試題目, 把舊方法、新方法都寫出來,方便大家比較學習。最後要小心 sort() vs. stable_sort()有些微不同, 考試要用stable_sort()
+
+```cpp
+#include <stdio.h>
+#include <string>
+#include <map>
+using namespace std;
+char nation[80], line[80];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+
+	std::map<std::string, int> table;
+	for(int i=0; i<N; i++){
+		scanf("%s", nation);
+		gets(line);
+		table[ nation ] ++;
+	}
+
+	for( auto it = table.begin(); it!=table.end(); ++it){
+		printf("%s %d\n", it->first, it->second);
+	}
+
+}
+```
+
+## step01-1
+step01-1今天考試的程式中用到上週教的 vector 及它的 begin() end() 但是同學不熟。因此, 老師在 step01-1 把 C++の絵本 裡面的圖秀出來, 同時讓大家練習簡單的 C++, 先從 stdcin  N; 還有 stdcin  name[i]  grade[i] 讀入, stdcout  name  stdendl; 印出。
+
+```cpp
+//Week11-1.cpp step01-1
+//想熟悉 C++ std::vector
+//#include <stdio.h> 舊
+#include <iostream>//新
+#include <vector>
+char name[100][30];
+int grade[100];
+int main()
+{
+	int N;
+	//scanf("%d", &N);
+	std::cin >> N;
+	for(int i=0; i<N; i++){
+		std::cin >> name[i] >> grade[i];
+	}    //你的資料,往右流到變數裡面
+
+	for(int i=0; i<N; i++){
+		std::cout << name[i] << std::endl; //end line 表示跳行
+	}   //  送到左邊  << 變數
+
+}
+```
+
+## step02-1
+利用 using namespace std; 來簡化程式碼的大量 std
+
+```cpp
+//Week11-2.cpp step02-1
+//想熟悉 C++ std::vector
+//#include <stdio.h> 舊
+#include <iostream>//新
+#include <vector>
+char name[100][30];
+int grade[100];
+using namespace std ; //std::重覆好多次,其實可省略
+int main()
+{
+	int N;
+	//scanf("%d", &N);
+	cin >> N;
+	for(int i=0; i<N; i++){
+		cin >> name[i] >> grade[i];
+	}    //你的資料,往右流到變數裡面
+
+	for(int i=0; i<N; i++){
+		cout << name[i] << endl; //end line 表示跳行
+	}   //  送到左邊  << 變數
+
+}
+```
+
+## step02-2
+繼續教大家,利用vector建出一個長度為N而且每一格的單位是Student的長長的陣列,而前面class Student{...}在宣告時要記得加上public:
+
+```cpp
+//Week11-3.cpp step02-2
+//想熟悉 C++ std::vector
+#include <iostream>
+#include <vector>
+using namespace std ;
+class Student{
+public:
+	char name[30];
+	int grade;
+};
+bool Compare( Student a, Student b )
+{
+
+}
+int main()
+{
+	int N;
+	cin >> N;
+	vector<Student> stu(N); //啟用 vector 的變數 stu, 可以裝N個
+	//單位是Student  stu這個變數,可裝N個Student
+	for(int i=0; i<N; i++){
+		cin >> stu[i].name >> stu[i].grade;
+		//cin >> name[i] >> grade[i];
+	}
+
+	stable_sort( stu.bein(), stu.end(), compare );
+
+	for(int i=0; i<N; i++){
+		cout << stu[i].name << " " << stu[i].grade << endl;
+		//cout << name[i] << endl;
+	}
+}
+```
+
+## step02-3
+最後要使用algorithm裡面的 stable_sort()來排序 stable_sort( stu.begin(), stu.end(), compare) 並且把 compare()函式寫好, 完成今天的程式
+
+```cpp
+//Week11-4.cpp step02-3
+//stable_sort
+#include <iostream>
+#include <vector>
+#include <algorithm> //「資料結構、演算法」的演算法
+using namespace std ;
+class Student{
+public:
+	char name[30];
+	int grade;
+};
+bool compare( Student a, Student b )
+{
+	return a.grade > b.grade ;
+}
+int main()
+{
+	int N;
+	cin >> N;
+	vector<Student> stu(N);
+	for(int i=0; i<N; i++){
+		cin >> stu[i].name >> stu[i].grade;
+	}
+
+	stable_sort( stu.begin(), stu.end(), compare );
+
+	for(int i=0; i<N; i++){
+		cout << stu[i].name << " " << stu[i].grade << endl;
+	}
+}
+```
+
+## step03-1
+為了熟悉 vector, 老師拿C++課本裡的範例, 裡面有 push_back() 的功能, 可以把原本沒有設定大小、裡面有0個的vector v 裡面, 逐一放入東西。最後用 for迴圈來印出來。
+
+```cpp
+///Week11-5.cpp step03-1 熟悉 vector
+///把課本的範例寫一次
+#include <vector> ///vector<???>  STL功能
+#include <iostream> ///cin 或 cout
+using namespace std;
+int main()
+{
+    vector<int> v;///v是vector裡面裝int
+    ///你沒說它要多大, 所以 v有0個
+    v.push_back(10);///把10放進去, v有1個
+    v.push_back(11);///把11放進去, v有2個
+    v.push_back(15);///把13放進去, v有3個
+
+    for(int i=0; i<3; i++){
+        cout << v[i] << endl;
+    }
+}
+```
+
+## step03-2
+
+照課本範例,vector會有一個iterator 可以在迴圈中使用, 配合 for(it=begin(); it!=end(); it++) 可以把每個格子都走過一次 。iterator看起來很難拼字, 不過熟練過後, 可以讓許多複雜的程式碼突然變得很簡單。
+
+```cpp
+///Week11-6.cpp step03-2 熟悉 vector
+///把課本的範例寫完
+#include <vector>
+#include <iostream>
+using namespace std;
+int main()
+{
+    vector<int> v;///v是vector裡面裝int
+    ///你沒說它要多大, 所以 v有0個
+    v.push_back(10);///把10放進去, v有1個
+    v.push_back(11);///把11放進去, v有2個
+    v.push_back(15);///把13放進去, v有3個
+              ///迭代子,迴圈會用到的那個i
+    vector<int>::iterator it;
+    for(it=v.begin() ; it!=v.end(); it++){///for(int i=0; i<3; i++){
+        cout << *it << endl;              ///cout << v[i] << endl;
+    }
+}
+```
