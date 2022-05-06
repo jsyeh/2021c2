@@ -1316,3 +1316,91 @@ int main()
     }
 }
 ```
+
+## step03-3
+來不及教的 std::map 先利用第09週考試的 List of Conquests 來做比較
+
+原來版本
+```cpp
+#include <stdio.h>//舊方法
+#include <string.h>
+char name[100][30], tempName[30];
+int grade[100];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	for(int i=0; i<N; i++){
+		scanf("%s %d", name[i], &grade[i] );
+	}
+	
+	for(int k=0; k<N-1; k++){
+		for(int i=0; i<N-1; i++){
+			if( grade[i] < grade[i+1] ){
+				int temp=grade[i];
+				grade[i]=grade[i+1];
+				grade[i+1]=temp;
+				strcpy( tempName, name[i] );
+				strcpy( name[i], name[i+1] );
+				strcpy( name[i+1], tempName );
+			}
+		}
+	}
+	
+	for(int i=0; i<N; i++){
+		printf("%s %d\n", name[i], grade[i] );
+	}
+}
+```
+
+改使用 std::map 的版本
+```cpp
+#include <stdio.h>
+#include <string>
+#include <map>
+using namespace std;
+char nation[80], line[80];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+
+	std::map<std::string, int> table;
+	for(int i=0; i<N; i++){
+		scanf("%s", nation);
+		gets(line);
+		table[ nation ] ++;
+	}
+
+	for( auto it = table.begin(); it!=table.end(); ++it){
+		printf("%s %d\n", it->first, it->second);
+	}
+
+}
+```
+
+不過如果 Compiler 沒有開啟 -std=c++11 的設定的話, 前面的程式可能會有問題, 要再回去舊一點的寫法
+
+```cpp
+#include <stdio.h>
+#include <string>
+#include <map>
+#include <iostream>
+using namespace std;
+char nation[80], line[80];
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	std::map<std::string, int> table;
+	for(int i=0; i<N; i++){
+		scanf("%s", nation);
+		gets(line);
+		table[ nation ] ++;
+	}
+	std::map<std::string, int>::iterator it;
+	for(it = table.begin(); it!=table.end(); it++){
+		cout << it->first << " " << it->second << endl;
+	}
+}
+```
