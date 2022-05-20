@@ -1404,3 +1404,146 @@ int main()
 	}
 }
 ```
+
+# Week13
+
+## step01-1
+把上週教過的內容,走一次!
+1. size(), background(), textSize(), fill(), text()
+2. void setup()設定,  void draw() 就有互動
+3. mouseX mouseY 座標
+4. void mousePressed() mouse按下去時, 要做的事
+5. GitHub Pages (你的帳號.github.io) 上傳你的程式food, 上網 https://你的帳號.github.io/food
+
+教一下網頁運作的機制 你的網站網址, 目錄, index.html 還有你的程式碼 food.js 或 week12_5_web.js 現在修改一下你的程式 增加食物(中餐吃牛排、中餐吃大餐)
+
+上週翻譯程式碼, 是用 pde2js.herokuapp.com
+
+本來是3個選項, 改成 5個選項
+
+修改了 text()部分
+```processing
+    text("中餐吃泡麵", 50, 50);
+    text("中餐UberEat", 50, 100);
+    text("中餐FoodPanda", 50, 150);
+    text("中餐吃牛排", 50, 200);
+    text("中餐吃大餐", 50, 250);
+```
+還有 if()判斷
+
+```processing
+    if (choice == 3)
+        rect(50, 200, 150, 2);
+    if (choice == 4)
+        rect(50, 250, 150, 2);
+```
+
+```processing
+function mousePressed() {
+    // choice = (choice + 1) % 3;
+    choice = int(random(5));
+}
+```
+
+## step01-2
+
+1. copy week12_4_random 存成
+week13_2_ellipse
+2. ellipse( 圓心x, 圓心y, 寬度w, 高度h)
+
+```processing
+//Step01-2 Week13_2_ellipse 改用圓圈圈
+void setup(){
+  size(400,300);
+  textSize(40);
+}
+int choice = -1; //-1:沒選, 0:Choise 1
+void draw(){
+  background(#DFEA45); //背景色
+  fill(#456FEA); //字的填充的顏色
+  if(choice==0) ellipse( 25, 25, 40, 40);
+  if(choice==1) ellipse( 25, 75, 40, 40);
+  if(choice==2) ellipse( 25,125, 40, 40);
+  text("中文 1", 50,  50); 
+  text("Choice 2", 50, 100); 
+  text("Choice 3", 50, 150); 
+}
+void mousePressed(){
+  choice = int(random(3)) ;// choice = (choice + 1) % 3;
+}
+```
+
+## step02-1
+Mac 執行時, 有中文字型
+Web 執行時, 有中文字型
+Windows 執行時, 要自己設定中文字型
+File-Preference偏好設定中的中文字型,只在edit有用
+Run執行時,需要即時換成中文字型
+
+```processing
+//Step02-1 Week13_3_font
+// 在你熟悉的功能,按右鍵,可看參考文件
+// 下面會秀出相關的指令 
+size(300,200);
+
+PFont font = createFont("標楷體", 50);
+textFont(font);//只有Windows需設定中文
+
+text("中文", 50, 50);
+```
+
+## step02-2
+要放圖片 week13_4_image
+
+1. 相關的程式指令
+2. 宣告圖片變數 PImage img; 讀圖 img=loadImage("圖檔.png");
+3. 把圖秀出來 image( img, x座標, y座標)
+4. 圖片放哪裡? 
+
+```processing
+//Week13_4_image step02-2 
+size(500,500);
+PImage img = loadImage("image.png");//大象
+image( img, 0, 0);//左上角
+```
+
+## step03-1
+step03-1_把模型讀進來, 要先在 Teams下載模型。這個部分比較多觀念,首先把size(500,500,P3D)開啟Processing 3D功能, 宣告 PShape gundam; gundam=loadShape(模型檔) 讀入模型, shape(gundam) 會看到在左上角像螞蟻大小的模型, scale(20,20,20)放大20倍後,果然變大,但佔左半邊。translate(250,0,0) 移到中間, 只是倒過來。
+
+step03-1_因為下週放假, 老師提早示範之後會教的 3D模型如何讀進來(大二下電腦圖學、3D設計、進階程式設計會教), 使用 PShape gundam; gundam = loadShape(模型檔);讀入, shape(gundam)會畫出來。移動translate 旋轉rotate, 放大scale等指令, 讓模型秀得更漂亮。
+
+```processing
+//Week13_5_shape_gundam step03-1
+PShape gundam;//等一下要用的鋼彈模型
+void setup(){  //P語言其實是Java的變型(方言)
+  size(500, 500, P3D); //有P語言的3D功能
+  gundam = loadShape("Gundam.obj");
+}       //讀入模型,很像今天教的loadImage()
+void draw(){//每秒60次畫圖
+  background(#F8FFAF);
+  //但是這個模型太小了, 等一下要把它放!!
+  translate( 250, 0, 0);//往右移一半
+  scale(20, 20, 20);//放大20倍,看起來倒過來
+  //因為建3D模型時,Y軸向上, 小畫家/P語言/圖片,Y向下
+  shape(gundam); //秀出模型,像今天教的image()
+}//Q: 模型 Gundam.obj 在哪裡?
+```
+
+# step03-2
+再利用 scale(20, -20, 20) 把 Y座標正負倒過來。最後利用 translate(250, 500) 移到中間偏下面, 便能看到整個 Gundam 模型
+
+```processing
+//Week13_6_gundam_correct step03-2 不用交
+PShape gundam;
+void setup(){
+  size(500, 500, P3D);
+  gundam = loadShape("Gundam.obj");
+}
+void draw(){
+  background(#F8FFAF);
+  translate( 250, 500);
+  scale(20, -20, 20);
+  rotateY( radians(frameCount) );
+  shape(gundam);
+}
+```
