@@ -1551,3 +1551,249 @@ void draw(){
 # Week14 入學口試停課
 
 # Week15 端午節放假
+
+# Week16
+
+## step01-1
+網友做雙人小遊戲時有問題被罵,有3個好人友善的回應。現在先練習void keyPressed() 按按鍵時會叫它。把 key 存在 String line 裡面, 再用 text()印出來, 讓你了解你按了什麼按鍵
+
+```processing
+void setup(){//設定
+  size(300,300);
+}
+String line = "";
+void draw(){//畫圖60次/秒
+  background(#FFFFF2);
+  fill(0);
+  textSize(50);
+  text(line, 20, 50);
+}
+void keyPressed(){//按鍵
+  line = "key: " + key;
+}
+```
+
+## step01-2
+接下來想要解決 WASD 的鍵盤互動。把剛剛的程式變5行, 分別是 int x=150, y=150; 設定座標, ellipse(x, y, 30, ,30); 照座標畫圖, void keyPressed()裡面照著key的值,去改座標
+
+```processing
+//week16_keyPressed_key_WASD_move
+void setup(){
+  size(300,300);
+}
+int x=150, y=150; //座標
+void draw(){
+  background(#FFFFF2);
+  ellipse(x, y, 30, 30);
+}
+void keyPressed(){
+  if( key=='w' ) y -= 2;
+  if( key=='s' ) y += 2;
+  if( key=='a' ) x -= 2;
+  if( key=='d' ) x += 2;
+}
+```
+
+## step01-3
+修改今天step01-1的程式,原本的key不夠用, 再加上 keyCode 的值,方便等一下要做方向鍵哦
+
+```processing
+//week16_keyPressed_key
+//...
+void keyPressed(){//按鍵
+  line = "key: " + key;
+  line += "\nkeyCode: " + keyCode;
+}
+```
+
+## step02-1
+有了剛剛的keyCode資訊,便能將原本單人WASD控制的遊戲,變成第2位玩家用方向鍵的雙人遊戲
+
+```processing
+//week16_two_player
+void setup(){
+  size(400,300);//寬一點
+}
+int x=100, y=150, x2=300, y2=150; //座標
+void draw(){
+  background(#FFFFF2);
+  ellipse(x, y, 30, 30);
+  ellipse(x2, y2, 30, 30);
+}
+void keyPressed(){//按鍵,一次只能一個人
+  if( key=='w' ) y -= 2;
+  if( key=='s' ) y += 2;
+  if( key=='a' ) x -= 2;
+  if( key=='d' ) x += 2;
+  if( keyCode==UP )  y2 -= 2;
+  if( keyCode==DOWN) y2 += 2;
+  if( keyCode==LEFT) x2 -= 2;
+  if( keyCode==RIGHT)x2 += 2;
+}
+```
+
+## step02-2
+為了解決2個按鍵同時按時會衝突的問題, 改使用 vx, vy 當成移動速度。在void draw()裡 x += vx; y += vy; 來持續更新位置。
+
+
+
+```processing
+//week16_two_player_together_vx_vy
+void setup(){
+  size(400,300);
+}
+int x=100, y=150, x2=300, y2=150; //座標
+int vx=0, vy=0, vx2=0, vy2=0; //移動速度
+void draw(){
+  background(#FFFFF2);
+  ellipse(x, y, 30, 30);
+  ellipse(x2, y2, 30, 30);
+  x += vx;  y += vy; //更新位置
+  x2+= vx2; y2+= vy2; //更新位置
+}
+void keyPressed(){//按鍵,一次只能一個人
+  if( key=='w' ) vy = -2; //y -= 2;
+  if( key=='s' ) vy = +2; //y += 2;
+  if( key=='a' ) vx = -2; //x -= 2;
+  if( key=='d' ) vx = +2; //x += 2;
+  if( keyCode==UP )  vy2 = -2; //y2 -= 2;
+  if( keyCode==DOWN) vy2 = +2; //y2 += 2;
+  if( keyCode==LEFT) vx2 = -2; //x2 -= 2;
+  if( keyCode==RIGHT)vx2 = +2; //x2 += 2;
+}
+```
+
+為避色按鍵放開還會動, 就再用 void keyReleased()來把速度清為0,完成網友需要的雙人遊戲程式
+```processing
+//week16_two_player_together_vx_vy_keyReleased
+//...
+void keyReleased(){//按鍵放開時,速度變0
+  if( key=='w' ) vy = 0;
+  if( key=='s' ) vy = 0;
+  if( key=='a' ) vx = 0;
+  if( key=='d' ) vx = 0;
+  if( keyCode==UP )  vy2 = 0;
+  if( keyCode==DOWN) vy2 = 0;
+  if( keyCode==LEFT) vx2 = 0;
+  if( keyCode==RIGHT)vx2 = 0;
+}
+```
+
+## step02-3
+今天第2個主題,是想要做出五子棋, 所以介紹完Kirby Wu自己做五子棋的故事後,我們也來做,先從line()畫線做起, 一條、兩條、三條, 然後用for迴圈啦
+
+```processing
+//week16_for_line_line_line
+size(500,500);
+background(#FFFFF2);
+//line( 0, 50,  500, 50);
+//line( 0,100,  500,100);
+//line( 0,150,  500,150);
+for(int y=50; y<500; y+=50){
+  line( 0,  y,  500,  y);
+}
+//line( 50, 0,   50, 500);
+//line(100, 0,  100, 500);
+for(int x=50; x<500; x+=50){
+  line(  x, 0,    x, 500);
+}
+```
+
+## step03-1
+有了棋盤,我們要互動畫棋子。先把程式加上void setup()及void draw()變成互動模式, int bx=0, by=0; 當成棋子的座標, ellipse(bx, by, 40, 40) 與 ellipse(mouseX,mouseY, 40,40) 可以畫出棋子與手上拿的棋子, void mousePressed()在按下mouse時可以更新bx,by座標。
+
+```processing
+//week16_go01_one_go week16_go 碁
+void setup(){
+  size(500,500);
+}
+int bx=0, by=0;//棋子的座標
+void draw(){
+  background(#FFFFF2);
+  for(int y=50; y<500; y+=50){
+    line( 0, y, 500, y );
+  }
+  for(int x=50; x<500; x+=50){
+    line( x, 0, x ,500);
+  }
+  fill(0);//黑
+  ellipse( bx, by, 40, 40 );
+  ellipse(mouseX, mouseY, 40, 40);
+}
+void mousePressed(){
+  bx=mouseX; by=mouseY;
+}
+```
+
+為了多一點棋子,我們利用陣列加迴圈
+```processing
+//week16_go02_many_go week16_go 碁
+void setup(){
+  size(500,500);
+}
+int []bx=new int[100];//棋子的座標 陣列
+int []by=new int[100];//棋子的座標 陣列
+int N=0;//棋子的數字,一開始0個棋子
+void draw(){
+  background(#FFFFF2);
+  for(int y=50; y<500; y+=50){
+    line( 0, y, 500, y );
+  }
+  for(int x=50; x<500; x+=50){
+    line( x, 0, x ,500);
+  }
+  fill(0);//黑
+  for(int i=0; i<N; i++){
+    ellipse( bx[i], by[i], 40, 40 );
+  }
+  ellipse(mouseX, mouseY, 40, 40);
+}
+void mousePressed(){
+  bx[N]=mouseX; by[N]=mouseY;
+  N++;
+}
+```
+
+## step03-2
+最後完成五子棋,利月i%2==0畫出黑棋, 手上拿的棋則是用 N%2==0 看是否是黑棋。最後把程式上傳到GitHub Pages讓家人能用網頁的方式來玩你放在雲端的簡單小遊戲
+
+```processing
+//week16_go 碁
+//要如何把程式放上網? (0) Processing Java寫完程式
+//(1) 把程式copy到 pde2js.herokuapp.com, 再轉換
+//(2) 把轉換後的程式, copy 到 Processing p5.js裡
+//(3) Run 它!! 127.0.0.1是你的電腦,家人朋友看不到
+//(4) 把程式存檔! 桌面的 go 的 index.html 有問題
+//(5) index.html 第9行 改成 go.js
+//(6) 把 桌面的 go 目錄,放到 GitHub 你的網頁
+//           你的帳號.github.io 
+//    ex. maruneko030.github.io
+//        maruneko030.github.io/go
+void setup(){
+  size(500,500);
+}
+int []bx=new int[100];//棋子的座標 陣列
+int []by=new int[100];//棋子的座標 陣列
+int N=0;//棋子的數字,一開始0個棋子
+void draw(){
+  background(#FFFFF2);
+  for(int y=50; y<500; y+=50){
+    line( 0, y, 500, y );
+  }
+  for(int x=50; x<500; x+=50){
+    line( x, 0, x ,500);
+  }
+  for(int i=0; i<N; i++){
+    if(i%2==0) fill(0);
+    else fill(255);
+    ellipse( bx[i], by[i], 40, 40 );
+  }
+  if(N%2==0) fill(0);
+  else fill(255);
+  ellipse(mouseX, mouseY, 40, 40);
+}
+void mousePressed(){
+  bx[N]=mouseX; by[N]=mouseY;
+  N++;
+}
+```
