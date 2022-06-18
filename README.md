@@ -1797,3 +1797,340 @@ void mousePressed(){
   N++;
 }
 ```
+
+# Week17
+程式設計 Week17 2022-06-17
+1. 問問題的技巧 事件1|記錄、事件2|記錄
+2. 整學期複習
+3. 程式設計會考 - 示範
+4. (小地鼠)
+
+## step01-1
+老師講解問問題事件, 並實作 Fibonacci費氏數列 的程式, 利用矩陣、迴圈來做出來。
+
+```cpp
+#include <stdio.h>
+int a[100];
+int main()
+{
+    a[0] = 0;
+    a[1] = 1;
+    for(int i=2; i<=10; i++){
+        a[i] = a[i-1] + a[i-2];
+        printf("%d ", a[i] );
+    }
+}
+```
+
+## step02-1
+小地鼠, 第一步, 希望畫出不同動作的地鼠, 先把上下左右4個圖片都loadImage()讀進來, 並用image()顯示出來
+
+```processing
+PImage img1,img2,img3,img4;
+void setup(){
+  size(640,480);
+  img1=loadImage("groundhogIdle.png");
+  img2=loadImage("groundhogDown.png");
+  img3=loadImage("groundhogLeft.png");
+  img4=loadImage("groundhogRight.png");
+}
+void draw(){
+  image(img1, 0,  0);
+  image(img2, 0, 80);
+  image(img3, 0,160);
+  image(img4, 0,240);
+}
+```
+
+## step02-2
+
+使用 keyPressed() 及 keyReleased() 來切換圖片 及改變速度, 與上週很像
+
+放開key的時候, keyReleased() 控制讓小地鼠就不能再走 
+
+```processing
+PImage img1, img2, img3, img4, gopher;
+void setup(){
+  size(640,480);
+  img1 = loadImage("groundhogIdle.png");
+  img2 = loadImage("groundhogDown.png");
+  img3 = loadImage("groundhogLeft.png");
+  img4 = loadImage("groundhogRight.png");
+  gopher = img1;
+}
+int x=300, y=80, vx=0, vy=0;
+void draw(){
+  background(#FFFFF2);
+  image(gopher, x, y);
+  x += vx; y += vy;
+}
+void keyPressed(){
+  if(keyCode==LEFT){ vx=-1; vy=0; gopher=img3;}
+  if(keyCode==RIGHT){ vx=+1; vy=0; gopher=img4;}
+  if(keyCode==DOWN){ vx=0; vy=1; gopher=img2;}
+}
+void keyReleased(){
+  vx=0; vy=0; gopher=img1;
+}
+```
+
+## step02-3
+往下走時,希望是土壤動,地鼠保持一定的高度。所以y座標稍做修改, 變成土壤往 -y 方向移動, 而地鼠固定在 y=80的地方。
+
+```processing
+PImage img1, img2, img3, img4, gopher, soil;
+void setup(){
+  size(640,480);
+  soil = loadImage("soil8x24.png");
+  img1 = loadImage("groundhogIdle.png");
+  img2 = loadImage("groundhogDown.png");
+  img3 = loadImage("groundhogLeft.png");
+  img4 = loadImage("groundhogRight.png");
+  gopher = img1;
+}
+int x=300, y=0, vx=0, vy=0;
+void draw(){
+  image(soil, 0, 160-y);//background(#FFFFF2);
+  image(gopher, x, 80);
+  x += vx; y += vy;
+}
+void keyPressed(){
+  if(keyCode==LEFT){ vx=-1; vy=0; gopher=img3;}
+  if(keyCode==RIGHT){ vx=+1; vy=0; gopher=img4;}
+  if(keyCode==DOWN){ vx=0; vy=1; gopher=img2;}
+}
+void keyReleased(){
+  vx=0; vy=0; gopher=img1;
+}
+```
+
+## step03-1
+老師的題目及圖片是來自一位網友的作業, 在網友的GitHub裡看到作業assign3的下一步要畫出石頭, 所以宣告一個 `int [][] a` 的Java 2維陣列, 裡面1表示石頭。for迴圈裡 `if(a[i][j]==1)`就畫石頭。座標要小心一下y座標對應i, x座標對應j
+
+```processing
+PImage img1, img2, img3, img4, gopher, soil, bg, stone;
+void setup(){
+  size(640,480);
+  bg = loadImage("bg.jpg");
+  stone = loadImage("stone1.png");
+  soil = loadImage("soil8x24.png");
+  img1 = loadImage("groundhogIdle.png");
+  img2 = loadImage("groundhogDown.png");
+  img3 = loadImage("groundhogLeft.png");
+  img4 = loadImage("groundhogRight.png");
+  gopher = img1;
+}
+int [][] a = {
+  {1, 0, 0, 0, 0, 0, 0, 0},
+  {0, 1, 0, 0, 0, 0, 0, 0},
+  {0, 0, 1, 0, 0, 0, 0, 0},
+  {0, 0, 0, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 0, 0, 0},
+  {0, 0, 0, 0, 0, 1, 0, 0},
+  {0, 0, 0, 0, 0, 0, 1, 0},
+  {0, 0, 0, 0, 0, 0, 0, 1},
+};
+int x=300, y=0, vx=0, vy=0;
+void draw(){
+  image(bg, 0, 0);//背景圖
+  image(soil, 0, 160-y);
+  for(int i=0; i<8; i++){//左手i 對應高度
+    for(int j=0; j<8; j++){//右手j 對應x座標
+      if(a[i][j]==1) image(stone, j*80, i*80+160-y);
+    }
+  }
+  image(gopher, x, 80);
+  x += vx; y += vy;
+}
+void keyPressed(){
+  if(keyCode==LEFT){ vx=-1; vy=0; gopher=img3;}
+  if(keyCode==RIGHT){ vx=+1; vy=0; gopher=img4;}
+  if(keyCode==DOWN){ vx=0; vy=1; gopher=img2;}
+}
+void keyReleased(){
+  vx=0; vy=0; gopher=img1;
+}
+```
+
+## step03-2
+接下來用陣列來呈現 24層土壤的狀況, 也利用 `if(a[i][j]==2)`來處理畫出複雜的石頭
+
+```processing
+PImage img1, img2, img3, img4, gopher, soil, bg, stone, stone2;
+void setup(){
+  size(640,480);
+  bg = loadImage("bg.jpg");
+  stone = loadImage("stone1.png");
+  stone2 = loadImage("stone2.png");
+  soil = loadImage("soil8x24.png");
+  img1 = loadImage("groundhogIdle.png");
+  img2 = loadImage("groundhogDown.png");
+  img3 = loadImage("groundhogLeft.png");
+  img4 = loadImage("groundhogRight.png");
+  gopher = img1;
+}
+int [][] a = {
+  {1, 0, 0, 0, 0, 0, 0, 0},
+  {0, 1, 0, 0, 0, 0, 0, 0},
+  {0, 0, 1, 0, 0, 0, 0, 0},
+  {0, 0, 0, 1, 0, 0, 0, 0},
+  {0, 0, 0, 0, 1, 0, 0, 0},
+  {0, 0, 0, 0, 0, 1, 0, 0},
+  {0, 0, 0, 0, 0, 0, 1, 0},
+  {0, 0, 0, 0, 0, 0, 0, 1},
+
+  {0, 1, 1, 0, 0, 1, 1, 0},
+  {1, 0, 0, 1, 1, 0, 0, 1},
+  {1, 0, 0, 1, 1, 0, 0, 1},
+  {0, 1, 1, 0, 0, 1, 1, 0},
+  {0, 1, 1, 0, 0, 1, 1, 0},
+  {1, 0, 0, 1, 1, 0, 0, 1},
+  {1, 0, 0, 1, 1, 0, 0, 1},
+  {0, 1, 1, 0, 0, 1, 1, 0},
+  
+  {0, 1, 2, 0, 1, 2, 0, 1},
+  {1, 2, 0, 1, 2, 0, 1, 2},
+  {2, 0, 1, 2, 0, 1, 2, 0},
+  {0, 1, 2, 0, 1, 2, 0, 1},
+  {1, 2, 0, 1, 2, 0, 1, 2},
+  {2, 0, 1, 2, 0, 1, 2, 0},
+  {0, 1, 2, 0, 1, 2, 0, 1},
+  {1, 2, 0, 1, 2, 0, 1, 2},
+
+};
+int x=300, y=0, vx=0, vy=0;
+void draw(){
+  image(bg, 0, 0);//背景圖
+  image(soil, 0, 160-y);
+  for(int i=0; i<24; i++){//左手i 對應高度
+    for(int j=0; j<8; j++){//右手j 對應x座標
+      if(a[i][j]==1) image(stone, j*80, i*80+160-y);
+      if(a[i][j]==2){
+        image(stone, j*80, i*80+160-y);
+        image(stone2, j*80, i*80+160-y);
+      }
+    }
+  }
+  image(gopher, x, 80);
+  x += vx*6; y += vy*6;
+}
+void keyPressed(){
+  if(keyCode==LEFT){ vx=-1; vy=0; gopher=img3;}
+  if(keyCode==RIGHT){ vx=+1; vy=0; gopher=img4;}
+  if(keyCode==DOWN){ vx=0; vy=1; gopher=img2;}
+}
+void keyReleased(){
+  vx=0; vy=0; gopher=img1;
+}
+```
+
+## step03-3
+最後將Java版的程式,轉換成 p5.js 版後, 放在GitHub網站, 讓人可用網址直連網頁。
+在使用 pde2js.herokuapp.com 轉換時, 它會建議你把 loadImage() 移到 function preload() 裡面事先讀入圖片, 讓其他人在看網頁時的體驗可以更順(不用等太久)。這是之後可以修改的地方。
+
+```javascript
+//(0) 在 Java 模式, 先把程式寫好
+//(1) 切換 p5.js 模式, 有新視窗
+//(2) 利用 pde2js.herokuapp.com 將 Java 轉成 p5.js
+//(3) p5.js 貼回 p5.js視窗
+//(4) 另存新檔 gopher, 小心還沒放圖檔。將圖檔放進你的 桌面/gopher 裡
+//(5) index.html 裡 第9行 改成 src="gopher.js"
+//(6) 把 gopher目錄 拉近 GitHub 的 jsyeh.github.io 專案倉庫
+
+var img1, img2, img3, img4, gopher, soil, bg, stone, stone2;
+
+function setup() {
+    initializeFields();
+    createCanvas(640, 480);
+    bg = loadImage("bg.jpg");
+    stone = loadImage("stone1.png");
+    stone2 = loadImage("stone2.png");
+    soil = loadImage("soil8x24.png");
+    img1 = loadImage("groundhogIdle.png");
+    img2 = loadImage("groundhogDown.png");
+    img3 = loadImage("groundhogLeft.png");
+    img4 = loadImage("groundhogRight.png");
+    gopher = img1;
+}
+
+var a;
+
+var x, y, vx, vy;
+
+function draw() {
+    // 背景圖
+    image(bg, 0, 0);
+    image(soil, 0, 160 - y);
+    for (var i = 0; i < 24; i++) {
+        // 左手i 對應高度
+        for (var j = 0; j < 8; j++) {
+            // 右手j 對應x座標
+            if (a[i][j] == 1)
+                image(stone, j * 80, i * 80 + 160 - y);
+            if (a[i][j] == 2) {
+                image(stone, j * 80, i * 80 + 160 - y);
+                image(stone2, j * 80, i * 80 + 160 - y);
+            }
+        }
+    }
+    image(gopher, x, 80);
+    x += vx * 6;
+    y += vy * 6;
+}
+
+function keyPressed() {
+    if (keyCode == LEFT_ARROW) {
+        vx = -1;
+        vy = 0;
+        gopher = img3;
+    }
+    if (keyCode == RIGHT_ARROW) {
+        vx = +1;
+        vy = 0;
+        gopher = img4;
+    }
+    if (keyCode == DOWN_ARROW) {
+        vx = 0;
+        vy = 1;
+        gopher = img2;
+    }
+}
+
+function keyReleased() {
+    vx = 0;
+    vy = 0;
+    gopher = img1;
+}
+
+function initializeFields() {
+    img1 = null;
+    img2 = null;
+    img3 = null;
+    img4 = null;
+    gopher = null;
+    soil = null;
+    bg = null;
+    stone = null;
+    stone2 = null;
+    a = [ [ 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 1, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 1, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 1, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 1 ], [ 0, 1, 1, 0, 0, 1, 1, 0 ], [ 1, 0, 0, 1, 1, 0, 0, 1 ], [ 1, 0, 0, 1, 1, 0, 0, 1 ], [ 0, 1, 1, 0, 0, 1, 1, 0 ], [ 0, 1, 1, 0, 0, 1, 1, 0 ], [ 1, 0, 0, 1, 1, 0, 0, 1 ], [ 1, 0, 0, 1, 1, 0, 0, 1 ], [ 0, 1, 1, 0, 0, 1, 1, 0 ], [ 0, 1, 2, 0, 1, 2, 0, 1 ], [ 1, 2, 0, 1, 2, 0, 1, 2 ], [ 2, 0, 1, 2, 0, 1, 2, 0 ], [ 0, 1, 2, 0, 1, 2, 0, 1 ], [ 1, 2, 0, 1, 2, 0, 1, 2 ], [ 2, 0, 1, 2, 0, 1, 2, 0 ], [ 0, 1, 2, 0, 1, 2, 0, 1 ], [ 1, 2, 0, 1, 2, 0, 1, 2 ] ];
+    x = 300;
+    y = 0;
+    vx = 0;
+    vy = 0;
+}
+
+function preload() {
+// TODO: put method calls that load from files into this method
+// I found the following calls that you should move here:
+// - on line 4: bg = loadImage("bg.jpg")
+// - on line 5: stone = loadImage("stone1.png")
+// - on line 6: stone2 = loadImage("stone2.png")
+// - on line 7: soil = loadImage("soil8x24.png")
+// - on line 8: img1 = loadImage("groundhogIdle.png")
+// - on line 9: img2 = loadImage("groundhogDown.png")
+// - on line 10: img3 = loadImage("groundhogLeft.png")
+// - on line 11: img4 = loadImage("groundhogRight.png")
+// (note that line numbers are from your Processing code)
+}
+
+```
